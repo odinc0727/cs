@@ -1,5 +1,10 @@
 pub const KCP_HEADER_SIZE: usize = 24;
 
+pub struct KCPSegment {
+        pub header: KCPHeader,
+        pub payload: Vec<u8>,
+}
+
 #[derive(Debug, PartialEq)]
 pub struct KCPHeader {
         pub conversation: u32,
@@ -9,7 +14,18 @@ pub struct KCPHeader {
         pub timestamp: u32,
         pub sequence: u32,
         pub next_expected: u32,
-        pub length: u32,
+        pub length: u32, // payload 字节数
+}
+
+impl KCPSegment {
+        pub fn encode(&self) -> Vec<u8> {
+                todo!()
+        }
+
+        // 一个 UDP 数据报可能包含多个 KCP Segment，需要知道当前 Segment 消耗了多少字节，才能继续解析后面的数据。
+        pub fn decode(bytes: &[u8]) -> Option<(Self, usize)> {
+                todo!()
+        }
 }
 
 impl KCPHeader {
