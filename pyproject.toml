@@ -4,7 +4,11 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.14"
-dependencies = []
+dependencies = [
+    "kafka-python>=2.3.3,<3",
+    "psycopg[binary]>=3.3,<4",
+    "redis>=6,<9",
+]
 
 [tool.ruff]
 line-length = 120
