@@ -15,7 +15,6 @@ line-length = 120
 indent-width = 8
 
 [tool.ruff.format]
-quote-style = "single"
 line-ending = "lf"
 
 [tool.basedpyright]
