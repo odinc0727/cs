@@ -40,21 +40,21 @@ cd /Users/gopher/Codespace/myrepo/cs
 uv sync --locked
 brew services start kafka
 brew services start rabbitmq
-uv run python debezium/manage.py up
-uv run python debezium/manage.py status
+uv run python infra/debezium/manage.py up
+uv run python infra/debezium/manage.py status
 ```
 
 `up` 会检查 Kafka/Redis，下载并校验 Debezium 插件，初始化独立 PostgreSQL，创建表和 publication，启动 Connect 和消费者。重复执行保留数据库、复制槽和消费进度，不重新格式化 Kafka。默认 Homebrew 路径 `/opt/homebrew`；其他路径可设置 `HOMEBREW_PREFIX`。
 
 ```sh
 # 快照、增删改、重复业务值、事务回滚、消费者停机后追赶
-uv run python debezium/smoke.py
+uv run python infra/debezium/smoke.py
 
 # Kafka 协议收发；RabbitMQ 经 HTTP API 投递、出队和确认
-uv run python debezium/smoke_brokers.py
+uv run python infra/debezium/smoke_brokers.py
 
-# 事件解析及提交顺序的单元测试（从 debezium 子目录运行，也会找到 cs 的 uv 项目）
-uv run --directory debezium python -m unittest discover -s tests -v
+# 事件解析及提交顺序的单元测试（从 infra/debezium 子目录运行，也会找到 cs 的 uv 项目）
+uv run --directory infra/debezium python -m unittest discover -s tests -v
 ```
 
 CDC smoke 只操作新建的 UUIDv7 测试商品，结束时删除该商品。broker smoke 使用 `cdc.broker-smoke` topic，RabbitMQ 临时测试队列在结束时清理。
@@ -65,7 +65,7 @@ CDC smoke 只操作新建的 UUIDv7 测试商品，结束时删除该商品。br
 
 ```sh
 cd /Users/gopher/Codespace/myrepo/cs
-tail -f debezium/.runtime/logs/consumer.log
+tail -f infra/debezium/.runtime/logs/consumer.log
 ```
 
 终端二连接**示例实例 55438**，密码仅用于本机学习：
@@ -122,12 +122,12 @@ kafka-console-consumer --bootstrap-server 127.0.0.1:9092 \
 cd /Users/gopher/Codespace/myrepo/cs
 
 # 暂停消费者，期间改数据库，然后恢复：会从上次提交的 offset 继续
-uv run python debezium/manage.py stop-consumer
-uv run python debezium/manage.py start-consumer
+uv run python infra/debezium/manage.py stop-consumer
+uv run python infra/debezium/manage.py start-consumer
 
 # 停止本示例的 consumer、Connect、独立 PostgreSQL；保留数据
-uv run python debezium/manage.py down
-uv run python debezium/manage.py up
+uv run python infra/debezium/manage.py down
+uv run python infra/debezium/manage.py up
 
 # Kafka / RabbitMQ 单独管理
 brew services list
@@ -135,9 +135,9 @@ brew services stop kafka
 brew services stop rabbitmq
 ```
 
-- 示例日志：`debezium/.runtime/logs/consumer.log`、`connect.log`、`postgres.log`。
-- 示例 PG 数据：`debezium/.runtime/postgres`；复制槽 `cdc_products_slot`。
-- Connect 的 WAL 进度：`debezium/.runtime/connect.offsets`；Python 的消费进度存在 Kafka consumer group 中。这是两个不同的 offset。
+- 示例日志：`infra/debezium/.runtime/logs/consumer.log`、`connect.log`、`postgres.log`。
+- 示例 PG 数据：`infra/debezium/.runtime/postgres`；复制槽 `cdc_products_slot`。
+- Connect 的 WAL 进度：`infra/debezium/.runtime/connect.offsets`；Python 的消费进度存在 Kafka consumer group 中。这是两个不同的 offset。
 - Kafka 配置：`/opt/homebrew/etc/kafka/server.properties`；数据：`/opt/homebrew/var/lib/kraft-combined-logs`。
 - RabbitMQ 配置：`/opt/homebrew/etc/rabbitmq/rabbitmq.conf`，日志：`/opt/homebrew/var/log/rabbitmq`。
 - 本次已将 Kafka、RabbitMQ 的消息与管理端口限制为本机监听；停用了 Homebrew 默认启用的 STOMP、MQTT、Stream 插件。RabbitMQ 节点为 `rabbit@localhost`。
