@@ -1,0 +1,9 @@
+You can run:
+
+```shell
+uv run python 01.workqueue/task.py First message.
+uv run python 01.workqueue/task.py Second message..
+uv run python 01.workqueue/task.py Third message...
+uv run python 01.workqueue/task.py Fourth message....
+uv run python 01.workqueue/task.py Fifth message.....
+```

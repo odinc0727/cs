@@ -8,3 +8,11 @@
 
 ### Language ###
 .venv/
+__pycache__/
+*.py[cod]
+target/
+*.o
+*.so
+*.dylib
+*.dll
+*.a
