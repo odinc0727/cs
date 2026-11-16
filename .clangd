@@ -1,12 +1,23 @@
 Completion:
   AllScopes: true
   HeaderInsertion: Never
+CompileFlags:
+  Add: [-I/opt/homebrew/include]
 
+---
 # C++
 If:
   PathMatch: '.*\.(cpp|cc|cxx|hpp|hxx)$'
 CompileFlags:
   Remove: [-std=*]
-  Add: 
+  Add:
     - -std=c++23
-    - -I/opt/homebrew/include
+
+---
+# C
+If:
+  PathMatch: '.*\.(c|h)$'
+CompileFlags:
+  Remove: [-std=*]
+  Add:
+    - -std=c23

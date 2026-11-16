@@ -33,4 +33,4 @@ clean:
 	@rm -r bin/
 
 run-cpp: pre
-	@$(CXX) $(CXXFLAGS) main.cpp -o bin/main $(LDLIBS) && ./bin/main
+	@$(CXX) $(CXXFLAGS) bitmap.cpp -o bin/main $(LDLIBS) && ./bin/main
