@@ -16,7 +16,7 @@ CompileFlags:
 ---
 # C
 If:
-  PathMatch: '.*\.(c|h)$'
+  PathMatch: '.*\.c$'
 CompileFlags:
   Remove: [-std=*]
   Add:
